@@ -95,7 +95,7 @@ def plot_heatmap(dataframe):
     numeric_dataframe = dataframe.select_dtypes(include=["number"])
     correlation_matrix = numeric_dataframe.corr()
 
-    plot.figure(figsize=(12, 8))  # Increase figure width for more space on the right
+    plot.figure(figsize=(12, 8))
     sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f")
     plot.title("Heatmap of Correlation Matrix")
 

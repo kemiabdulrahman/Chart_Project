@@ -7,10 +7,8 @@ import matplotlib.pyplot as plot
 dataframe = pd.read_csv("jamb_exam_results.csv")
 
 
-
 def plot_histogram(dataframe):
 
-    
     score_df = dataframe["JAMB_Score"]
     score_mean = score_df.mean()
     score_median = score_df.median()
@@ -49,7 +47,6 @@ def plot_histogram(dataframe):
     plot.close()
 
 
-
 def plot_scatter(dataframe):
 
     jamb_score_mean = dataframe["JAMB_Score"].mean()
@@ -84,63 +81,25 @@ def plot_scatter(dataframe):
         bbox=dict(facecolor="white", alpha=0.5),
     )
 
-    plot.tight_layout(pad=3)  
+    plot.tight_layout(pad=3)
 
     plot.savefig("plots/scatter.png")
     plot.close()
 
 
-def plot_heatmap(dataframe):
-
+def plot_boxplot(dataframe):
     numeric_dataframe = dataframe.select_dtypes(include=["number"])
-    correlation_matrix = numeric_dataframe.corr()
-
     plot.figure(figsize=(12, 8))
-    sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f")
-    plot.title("Heatmap of Correlation Matrix")
+    sns.boxplot(data=numeric_dataframe, orient="h", palette="coolwarm")
 
-    
-    high_corr = [
-        (x, y, correlation_matrix.loc[x, y])
-        for x in correlation_matrix.columns
-        for y in correlation_matrix.columns
-        if (abs(correlation_matrix.loc[x, y]) > 0.8) and (x != y)
-    ]
-    low_corr = [
-        (x, y, correlation_matrix.loc[x, y])
-        for x in correlation_matrix.columns
-        for y in correlation_matrix.columns
-        if (abs(correlation_matrix.loc[x, y]) < 0.2) and (x != y)
-    ]
+    plot.title("Box Plot with Statistics")
+    plot.xlabel("Value")
+    plot.ylabel("Variables")
 
-    high_corr_text = "\n".join([f"{x} & {y}: {corr:.2f}" for (x, y, corr) in high_corr])
-    low_corr_text = "\n".join([f"{x} & {y}: {corr:.2f}" for (x, y, corr) in low_corr])
-
-    plot.gca().text(
-        1.25,  
-        0.8,
-        f"High Correlations:\n{high_corr_text}",
-        transform=plot.gca().transAxes,
-        fontsize=10,
-        verticalalignment="top",
-        horizontalalignment="left",
-        bbox=dict(facecolor="white", alpha=0.5),
-    )
-    plot.gca().text(
-        1.25,
-        0.3,
-        f"Low Correlations:\n{low_corr_text}",
-        transform=plot.gca().transAxes,
-        fontsize=10,
-        verticalalignment="top",
-        horizontalalignment="left",
-        bbox=dict(facecolor="white", alpha=0.5),
-    )
-
-    plot.savefig("plots/heatmap.png", bbox_inches="tight")
+    plot.savefig("plots/boxplot.png", bbox_inches="tight")
     plot.close()
 
 
 plot_histogram(dataframe)
 plot_scatter(dataframe)
-plot_heatmap(dataframe)
+plot_boxplot(dataframe)
